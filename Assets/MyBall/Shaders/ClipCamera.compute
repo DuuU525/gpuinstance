@@ -1,0 +1,47 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel ClipCamera
+
+StructuredBuffer<float3> posInfo;
+//StructuredBuffer<float3> triangleInfo;
+//StructuredBuffer<float3> verticeInfo;
+
+float3 cameraPos;
+float4 planes[6];
+uint instanceCount;
+
+AppendStructuredBuffer<uint> cullresult;
+
+bool IsOutsidePlanes(float4 plane, float3 pointPos)
+{
+    if (dot(plane.xyz, pointPos) + plane.w > 3.5)
+    {
+        return true;
+    }
+    return false;
+}
+
+[numthreads(1024,1,1)]
+void ClipCamera (uint3 id : SV_DispatchThreadID)
+{
+    if (id.x >= instanceCount)
+    {
+        return;
+    }
+    
+    float3 pos = posInfo[id.x];
+    
+    
+    if (dot(normalize(pos), normalize(cameraPos)) < 0.5)//背面筛选
+    {
+        return;
+    }
+    
+    //不在摄像机视野
+    for (int i = 0; i < 6; i++)
+    {
+        if (IsOutsidePlanes(planes[i], pos))
+            return;
+    }
+    
+    cullresult.Append(id.x);
+}

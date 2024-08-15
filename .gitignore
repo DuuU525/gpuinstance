@@ -1,0 +1,12 @@
+/Library
+/.vscode
+/*.csproj
+/*.vsconfig
+/Logs
+/UserSettings/Layouts/*.dwlt
+/*.sln
+/Assets/GameMap/Models
+/.vs
+/obj
+/Temp
+/Build_Release
