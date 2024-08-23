@@ -1,0 +1,21 @@
+workflow:
+  rules:
+    - if: $CI_COMMIT_BRANCH =~ /.*release.*/
+
+before_script:
+  - export PATH="C:\Python310:$PATH"
+
+stages:
+  - build
+
+build:
+  stage: build
+  tags:
+    - runnertest1_shell
+
+  script:
+    - echo "开始测试runnertest1 shell.."
+    - docker run
+    - echo "结束测试runnertest1 shell."
+
+  when: manual # 增加手动触发流水线设置
